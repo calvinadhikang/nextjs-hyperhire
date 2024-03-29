@@ -1,9 +1,4 @@
-export interface User {
-    name: string,
-    username: string,
-    password: string,
-    point: number
-}
+import { User } from "../interfaces/interfaces"
 
 export const setUser = (user: User) => {
     localStorage.setItem('user', JSON.stringify(user))

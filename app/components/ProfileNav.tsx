@@ -1,19 +1,21 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { getUser, removeUser, User } from "../utils/auth";
+import { getUser, removeUser } from "../utils/auth";
 import Link from "next/link";
+import { User } from "../interfaces/interfaces";
 
 export default function ProfileNav () {
     const [userData, setUserData] = useState<User | null>(null);
+    const [isLogout, setIsLogout] = useState(false)
 
     useEffect(() => {
         setUserData(getUser())
-    }, [userData])
+    }, [isLogout])
 
     const handleLogout = () => {
         removeUser()
-        setUserData(null)
+        setIsLogout(true)
     }
     
     return (
