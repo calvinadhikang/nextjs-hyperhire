@@ -1,33 +1,36 @@
 'use client'
 import API_URLS from "@/app/api/apiConfig";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Link from "next/link";
+import { setegid } from "process";
 import { useState } from "react";
 
 export default function Page(){
     const [name, setName] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [error, setError] = useState(false)
+    const [error, setError] = useState('')
 
     const handleRegister = async () => {
         if (name == "" || username == "" || password == "") {
-            setError(true)
+            setError('All inputs must be filled')
             return
         }
 
-        try {
-            const response = await axios.post(API_URLS + "auth/register", {
+        const response = await fetch(API_URLS + "auth/register", {
+            method: 'POST',
+            body: JSON.stringify({
                 name: name,
                 username: username,
                 password: password
             })
+        })
+        const result = await response.json()
 
-            if (response.status == 201) {
-                alert("Register Succesfull")
-            }
-        } catch (error) {
-            console.log(error)
+        if (response.status == 201) {
+            alert("Register Succesfull")
+        }else {
+            setError(result.message)
         }
     }
 
@@ -57,7 +60,7 @@ export default function Page(){
                 </div>
                 
                 <div className="space-y-2">
-                    {error && <p className="text-error">All inputs must be filled !</p>}
+                    {error != '' && <p className="text-error">{error}</p>}
                     <button className="btn btn-primary btn-block" onClick={() => handleRegister()}>Sign Up</button>
                 </div>
             </div>

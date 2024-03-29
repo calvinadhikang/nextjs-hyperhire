@@ -1,18 +1,21 @@
 'use client'
 
 import API_URLS from "@/app/api/apiConfig";
+import { setUser } from "@/app/utils/auth";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { navigate } from "../authaction";
 
 export default function Page(){
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [error, setError] = useState(false)
+    const [error, setError] = useState('')
 
     const handleSignIn = async () => {
         if (username == '' || password == '') {
-            setError(true)
+            setError('All inputs must be filled !')
             return
         }
 
@@ -22,11 +25,11 @@ export default function Page(){
                 password: password
             })
 
-            if (response.status == 201) {
-                alert("Login Succesfull")
-            }
+            //set localstorage
+            setUser(response.data)
+            await navigate('/')
         } catch (error) {
-            console.log(error)
+            alert("Login Failed")
         }
     }
     
@@ -49,7 +52,7 @@ export default function Page(){
                 </div>
     
                 <div className="space-y-2">
-                    {error && <p className="text-error">All inputs must be filled !</p>}
+                    {error && <p className="text-error">{error}</p>}
                     <button className="btn btn-primary btn-block" onClick={() => handleSignIn()}>Sign In</button>
                 </div>
             </div>
