@@ -23,6 +23,16 @@ export default function CartItem ({
         alert("Success Delete")
         onAction()
     }
+    
+    const handleCheckout = async () => {
+        let url = `cart/checkout/${cart.id}`
+        const response = await axios.post(API_URLS + url)
+        alert(response.data.message)
+
+        if (!response.data.error) {
+            onAction()
+        }
+    }
 
     return (
         <>
@@ -33,7 +43,7 @@ export default function CartItem ({
                         <p className="font-medium text-xl">{cart.book.title}</p>
                         <p>$ {cart.book.price} x {cart.quantity} pcs</p>
                         <div className="space-x-2">
-                            <button className="btn btn-primary">Purchase</button>
+                            <button className="btn btn-primary" onClick={() => handleCheckout()}>Purchase</button>
                             <button className="btn btn-error" onClick={()=> showModal() }>Cancel</button>
                         </div>
                     </div>
