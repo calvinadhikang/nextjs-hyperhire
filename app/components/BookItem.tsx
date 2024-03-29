@@ -1,6 +1,31 @@
+import axios from "axios";
 import { Book } from "../interfaces/interfaces";
+import { getUser } from "../utils/auth";
+import API_URLS from "../api/apiConfig";
+import { useRouter } from "next/navigation";
 
 export default function BookItem(book: Book){
+    const router = useRouter()
+
+    const handleBuy = async () => {
+        const user = getUser()
+        if (user == null) {
+            alert("Harus Login")
+        }else{
+            try {
+                const response = await axios.post(API_URLS + 'book/buy', {
+                    user: user.id,
+                    book: book.id,
+                    quantity: 1
+                })
+
+                router.push('/cart')
+            } catch (error) {
+                alert("error buy")
+            }
+        }
+    }
+
     return (
         <div className="card card-compact bg-base-100 shadow-xl">
             <figure><img src={book.image} alt="Shoes" /></figure>
@@ -14,7 +39,7 @@ export default function BookItem(book: Book){
                     <div className="badge badge-outline badge-sm">Fashion</div> 
                     <div className="badge badge-outline badge-sm">Products</div>
                 </div>
-                <button className="btn bg-indigo-600 text-white hover:bg-indigo-500 btn-sm mt-2 btn-block">Buy</button>
+                <button onClick={handleBuy} className="btn bg-indigo-600 text-white hover:bg-indigo-500 btn-sm mt-2 btn-block">Buy</button>
             </div>
         </div>
     )
