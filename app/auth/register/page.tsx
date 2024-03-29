@@ -1,11 +1,14 @@
 'use client'
 import API_URLS from "@/app/api/apiConfig";
+import { setUser } from "@/app/utils/auth";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
-import { setegid } from "process";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+
 export default function Page(){
+    const router = useRouter()
     const [name, setName] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -17,21 +20,21 @@ export default function Page(){
             return
         }
 
-        const response = await fetch(API_URLS + "auth/register", {
-            method: 'POST',
-            body: JSON.stringify({
+        try {
+            const response = await axios.post(API_URLS + "auth/register", {
                 name: name,
                 username: username,
                 password: password
             })
-        })
-        const result = await response.json()
-
-        if (response.status == 201) {
-            alert("Register Succesfull")
-        }else {
-            setError(result.message)
+            
+            if (response.status == 201) {
+                router.push('/')
+                setUser(response.data)
+            }
+        } catch (error) {
+            setError('Username has been used')
         }
+
     }
 
     return (

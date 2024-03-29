@@ -12,3 +12,8 @@ export interface Book {
     image: string,
     price: number
 }
+
+export interface Tag {
+    id: number,
+    name: string,
+}

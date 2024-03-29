@@ -4,11 +4,11 @@ import API_URLS from "@/app/api/apiConfig";
 import { setUser } from "@/app/utils/auth";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { navigate } from "../authaction";
 
 export default function Page(){
+    const router = useRouter()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
@@ -27,7 +27,7 @@ export default function Page(){
 
             //set localstorage
             setUser(response.data)
-            await navigate('/')
+            router.push('/')
         } catch (error) {
             alert("Login Failed")
         }
