@@ -113,7 +113,7 @@ export default function BookPage () {
                         hasMore={hasMore}
                         loader={<div className="text-center"><span className="loading loading-dots loading-lg"></span></div>}
                         endMessage={<div className="text-center mt-10">No More Data</div>}
-                        scrollThreshold={0.9}
+                        scrollThreshold={0.8}
                     >
                         <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-5 ">
                             {books && books.map((book) => <BookItem key={book.id} {...book}></BookItem>)}

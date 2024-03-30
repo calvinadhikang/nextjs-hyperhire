@@ -7,44 +7,75 @@ import API_URLS from "../api/apiConfig"
 import { Cart, User } from "../interfaces/interfaces"
 import CartItem from "../components/CartItem"
 import { useRouter } from "next/navigation"
-import { setuid } from "process"
+import InfiniteScroll from "react-infinite-scroll-component"
 
 export default function Page(){
     const router = useRouter()
-    const [cart, setCart] = useState<Cart[]>([])
+    const [carts, setCarts] = useState<Cart[]>([])
     const [toggle, setToggle] = useState(false)
     const [user, setUser] = useState<User | null>(null)
+    const [page, setPage] = useState(1)
+    const limit = 4
+    const [hasMore, setHasMore] = useState(true)
     
     let total = 0
 
-    useEffect(() => {
-        const fetchCart = async () => {
-            const user = getUser()
-            if (user != null) {
-                setUser(user)
-                let url = `cart/${user.id}`
-                const response = await axios.get(API_URLS + url)
-                setCart(response.data)
-            }else{
-                router.push('/')
-            }
-        }
+    const fetchCarts = async () => {
+        const user = getUser()
+        if (user != null) {
+            setUser(user)
 
-        fetchCart()
+            const queryParams = new URLSearchParams();
+            queryParams.append('page', page.toString())
+            queryParams.append('limit', limit.toString())
+
+            let url = `cart/${user.id}?${queryParams}`
+            const response = await axios.get(API_URLS + url)
+            const newData = response.data
+            console.log(url)
+            console.log(newData)
+
+            if (newData.length === 0) {
+                setHasMore(false)
+            } else {
+                const filteredNewData = newData.filter((item: Cart) => !carts.find(cart => cart.id === item.id));
+                setCarts((prevData) => [...prevData, ...filteredNewData])
+                setPage((prevPage) => prevPage + 1)
+            }
+        }else{
+            router.push('/')
+        }
+    }
+
+    useEffect(() => {
+        fetchCarts()
     }, [toggle])
 
-    cart.map((cart) => total += cart.subtotal)
+    carts.map((cart) => total += cart.subtotal)
+
+    const handleDelete = () => {
+        router.push('/cart')
+    }
 
     return(
         <div>
             <div className="w-screen max-w-7xl m-auto">
                 <div className="mt-10">
                     <h1 className="text-3xl font-medium">Cart</h1>
+                    <InfiniteScroll
+                        dataLength={carts.length}
+                        next={fetchCarts}
+                        hasMore={hasMore}
+                        loader={<div className="text-center"><span className="loading loading-dots loading-lg"></span></div>}
+                        endMessage={<div className="text-center mt-10">No More Data</div>}
+                        scrollThreshold={0.8}
+                    >
                     <div className="flex flex-col flex-wrap gap-y-5 mt-5">
-                    {cart.map((cart) => 
-                        <CartItem key={cart.id} cart={cart} onAction={() => setToggle(!toggle)}></CartItem>
+                    {carts.map((cart) => 
+                        <CartItem key={cart.id} cart={cart} onAction={() => handleDelete()}></CartItem>
                     )}
                     </div>
+                    </InfiniteScroll>
                     <div className="flex flex-col w-full justify-end items-end gap-2 my-5">
                         <p className="text-xl">Grand Total : $ {total}</p>
                         {user?.point < total && <p className="text-error">Insufficient Points !</p>}
