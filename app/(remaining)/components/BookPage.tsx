@@ -111,7 +111,7 @@ export default function BookPage () {
                         dataLength={books.length}
                         next={fetchBooks}
                         hasMore={hasMore}
-                        loader={<div className="text-center"><span className="loading loading-dots loading-lg"></span></div>}
+                        loader={loading && <div className="text-center"><span className="loading loading-dots loading-lg"></span></div>}
                         endMessage={<div className="text-center mt-10">No More Data</div>}
                         scrollThreshold={0.8}
                     >

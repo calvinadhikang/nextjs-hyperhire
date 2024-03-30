@@ -5,6 +5,7 @@ import API_URLS from "../api/apiConfig";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
+import { showToast } from "./Toast";
 
 export default function BookItem(book: Book){
     const router = useRouter()
@@ -21,9 +22,10 @@ export default function BookItem(book: Book){
                     quantity: 1
                 })
 
+                showToast("Book has been added to cart !", 'success')
                 router.push('/cart')
             } catch (error) {
-                alert("error buy")
+            
             }
         }
     }

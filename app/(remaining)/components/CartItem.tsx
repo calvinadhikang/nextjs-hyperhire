@@ -5,6 +5,7 @@ import API_URLS from "../api/apiConfig";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { getUser } from "../utils/auth";
+import { showToast } from "./Toast";
 
 export default function CartItem ({
     cart, onAction
@@ -12,7 +13,6 @@ export default function CartItem ({
     cart: Cart,
     onAction: () => void
 }) {
-    
     const showModal = () => {
         const element = document.getElementById(`my_modal_${cart.id}`)
         if (element != null) {
@@ -23,8 +23,11 @@ export default function CartItem ({
     const handleDelete = async () => {
         let url = `cart/delete/${cart.id}`
         const response = await axios.post(API_URLS + url)
-        alert("Success Delete")
-        onAction()
+        const result = response.data
+        if (!result.error) {
+            showToast(result.message, 'success')
+            onAction()
+        }
     }
 
     return (

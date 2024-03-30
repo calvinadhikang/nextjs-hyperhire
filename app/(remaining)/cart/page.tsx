@@ -9,6 +9,8 @@ import CartItem from "../components/CartItem"
 import { useRouter } from "next/navigation"
 import InfiniteScroll from "react-infinite-scroll-component"
 import Link from "next/link"
+import { faL } from "@fortawesome/free-solid-svg-icons"
+import { showToast } from "../components/Toast"
 
 export default function Page(){
     const router = useRouter()
@@ -16,12 +18,15 @@ export default function Page(){
     const [toggle, setToggle] = useState(false)
     const [user, setUser] = useState<User | null>(null)
     const [page, setPage] = useState(1)
+    const [loading, setLoading] = useState(false)
     const limit = 4
     const [hasMore, setHasMore] = useState(true)
     
     let total = 0
 
     const fetchCarts = async () => {
+        setLoading(true)
+
         const user = getUser()
         if (user != null) {
             setUser(user)
@@ -43,9 +48,11 @@ export default function Page(){
                 setCarts((prevData) => [...prevData, ...filteredNewData])
                 setPage((prevPage) => prevPage + 1)
             }
+
         }else{
             router.push('/')
         }
+        setLoading(false)
     }
 
     useEffect(() => {
@@ -55,7 +62,7 @@ export default function Page(){
     carts.map((cart) => total += cart.subtotal)
 
     const handleDelete = () => {
-        router.push('/cart')
+        router.push('/')
     }
 
         
@@ -64,10 +71,13 @@ export default function Page(){
         if (user != null) {
             let url = `cart/checkout/${user.id}`
             const response = await axios.post(API_URLS + url)
-            alert(response.data.message)
-    
-            if (!response.data.error) {
-                router.push('/cart')
+            const result = response.data
+
+            if (result.error) {
+                showToast(result.message, 'error')
+            }else{
+                showToast(result.message, 'success')
+                setCarts([])
             }
         }
     }
@@ -83,7 +93,7 @@ export default function Page(){
                             dataLength={carts.length}
                             next={fetchCarts}
                             hasMore={hasMore}
-                            loader={<div className="text-center"><span className="loading loading-dots loading-lg"></span></div>}
+                            loader={ loading && <div className="text-center"><span className="loading loading-dots loading-lg"></span></div>}
                             endMessage={<div className="text-center mt-10">No More Data</div>}
                             scrollThreshold={0.8}
                         >
