@@ -17,7 +17,7 @@ export default function BookPage () {
     const [loading, setLoading] = useState(false)
     const [hasMore, setHasMore] = useState(true)
     const [page, setPage] = useState(1)
-    const limit = 4
+    const limit = 8
     const prevSearch = useRef('')
 
     const fetchBooks = async () => {
@@ -103,23 +103,22 @@ export default function BookPage () {
                         <input type="text" placeholder="Search by title..."className="input input-primary flex-1" value={search} onChange={(e) => setSearch(e.target.value)} />
                     </div>
                     
-                    {/* <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-5 "> */}
-                    <div className="">
-                        <p>{books.length}</p>
-                        <p>{page}</p>
-                        <p>{limit}</p>
+                    {/* <p>{books.length}</p>
+                    <p>{page}</p>
+                    <p>{limit}</p> */}
                         
-                        <InfiniteScroll
-                            dataLength={books.length}
-                            next={fetchBooks}
-                            hasMore={hasMore}
-                            loader={<p>Loading scroll...</p>}
-                            endMessage={<p>No more data</p>}
-                            scrollThreshold={0.9}
-                        >
+                    <InfiniteScroll
+                        dataLength={books.length}
+                        next={fetchBooks}
+                        hasMore={hasMore}
+                        loader={<div className="text-center"><span className="loading loading-dots loading-lg"></span></div>}
+                        endMessage={<div className="text-center mt-10">No More Data</div>}
+                        scrollThreshold={0.9}
+                    >
+                        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-5 ">
                             {books && books.map((book) => <BookItem key={book.id} {...book}></BookItem>)}
-                        </InfiniteScroll>
-                    </div>
+                        </div>
+                    </InfiniteScroll>
                 </div>
             </div>
         </div>
