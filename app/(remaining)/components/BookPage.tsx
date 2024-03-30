@@ -7,6 +7,7 @@ import axios from "axios"
 import API_URLS from "../api/apiConfig"
 import { useRouter } from "next/navigation"
 import InfiniteScroll from "react-infinite-scroll-component"
+import { faL } from "@fortawesome/free-solid-svg-icons"
 
 export default function BookPage () {
     const router = useRouter()
@@ -118,7 +119,26 @@ export default function BookPage () {
                         scrollThreshold={0.8}
                     >
                         <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-5 ">
-                            {books && books.map((book) => <BookItem key={book.id} {...book}></BookItem>)}
+                            {books && books.map((book) => {
+                                if (book.title.toLowerCase().includes(search.toLowerCase())) {
+                                    if (queryTags.length > 0) {
+                                        let accepted = false
+                                        book.tags.forEach((book_tag) => {
+                                            queryTags.forEach((queryTag) => {
+                                                if (book_tag.name == queryTag) {
+                                                    accepted = true
+                                                }
+                                            })
+                                        })
+
+                                        if (accepted) {
+                                            return <BookItem key={book.id} {...book}></BookItem>
+                                        }
+                                    }else{
+                                        return <BookItem key={book.id} {...book}></BookItem>
+                                    }
+                                }
+                            })}
                         </div>
                     </InfiniteScroll>
                 </div>
