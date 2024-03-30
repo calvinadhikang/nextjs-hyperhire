@@ -4,29 +4,29 @@ import { useEffect, useState } from "react"
 import { getUser } from "../utils/auth"
 import axios from "axios"
 import API_URLS from "../api/apiConfig"
-import { Cart } from "../interfaces/interfaces"
+import { Cart, User } from "../interfaces/interfaces"
 import CartItem from "../components/CartItem"
 import { useRouter } from "next/navigation"
+import { setuid } from "process"
 
 export default function Page(){
     const router = useRouter()
     const [cart, setCart] = useState<Cart[]>([])
     const [toggle, setToggle] = useState(false)
+    const [user, setUser] = useState<User | null>(null)
     
     let total = 0
-
-    const user = getUser()
-    if (user == null) {
-        router.push('/')
-    }
 
     useEffect(() => {
         const fetchCart = async () => {
             const user = getUser()
             if (user != null) {
+                setUser(user)
                 let url = `cart/${user.id}`
                 const response = await axios.get(API_URLS + url)
                 setCart(response.data)
+            }else{
+                router.push('/')
             }
         }
 
