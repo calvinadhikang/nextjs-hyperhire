@@ -37,7 +37,8 @@ export default function BookPage () {
         let url = `book?${queryParams}`
         console.log(url)
         try {
-            const response = await axios.get(API_URLS + url)
+            const response = await axios.get('/api/book?' + queryParams)
+            console.log(response)
             const newData = response.data
             
             if (newData.length === 0) {
@@ -60,7 +61,7 @@ export default function BookPage () {
     }, [])
 
     const fetchTags = async () => {
-        const response = await axios.get('/api/tags')
+        const response = await axios.get('/api/tag')
         console.log(response)
         setTags(response.data)
     }
