@@ -51,7 +51,7 @@ export default function CartItem ({
                     </div>
                 </div>
                 <p className="font-medium text-3xl">$ {cart.subtotal}</p>
-                <p className="" style={{ color: 'gray', fontSize:'1.5em'}} onClick={()=> showModal()}><FontAwesomeIcon icon={faTrash} /></p>
+                <p className="text-gray-500 text-3xl" onClick={()=> showModal()}><FontAwesomeIcon icon={faTrash} className="hover:text-error"/></p>
             </div>
 
             {/* Open the modal using document.getElementById('ID').showModal() method */}

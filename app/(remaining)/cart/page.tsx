@@ -12,8 +12,9 @@ export default function Page(){
     const router = useRouter()
     const [cart, setCart] = useState<Cart[]>([])
     const [toggle, setToggle] = useState(false)
-    let total = 0
     
+    let total = 0
+
     const user = getUser()
     if (user == null) {
         router.push('/')
@@ -44,9 +45,10 @@ export default function Page(){
                         <CartItem key={cart.id} cart={cart} onAction={() => setToggle(!toggle)}></CartItem>
                     )}
                     </div>
-                    <div className="flex flex-col w-full justify-end items-end gap-2 mt-5">
+                    <div className="flex flex-col w-full justify-end items-end gap-2 my-5">
                         <p className="text-xl">Grand Total : $ {total}</p>
-                        <button className="btn btn-primary">Purchase</button>
+                        {user?.point < total && <p className="text-error">Insufficient Points !</p>}
+                        <button className="btn btn-primary" disabled={user?.point < total}>Purchase</button>
                     </div>
                 </div>
             </div>
