@@ -1,9 +1,10 @@
 import { Lemon } from "next/font/google";
-import { Cart } from "../interfaces/interfaces";
+import { Cart, User } from "../interfaces/interfaces";
 import axios from "axios";
 import API_URLS from "../api/apiConfig";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { getUser } from "../utils/auth";
 
 export default function CartItem ({
     cart, onAction
@@ -24,16 +25,6 @@ export default function CartItem ({
         const response = await axios.post(API_URLS + url)
         alert("Success Delete")
         onAction()
-    }
-    
-    const handleCheckout = async () => {
-        let url = `cart/checkout/${cart.id}`
-        const response = await axios.post(API_URLS + url)
-        alert(response.data.message)
-
-        if (!response.data.error) {
-            onAction()
-        }
     }
 
     return (
