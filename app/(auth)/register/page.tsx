@@ -22,7 +22,7 @@ export default function Page(){
         }
 
         try {
-            const response = await axios.post(API_URLS + "auth/register", {
+            const response = await axios.post("api/register", {
                 name: name,
                 username: username,
                 password: password
@@ -33,11 +33,12 @@ export default function Page(){
                 showToast(result.message, 'error')
                 setError(result.message)
                 return
+            }else{
+                showToast('Register successful !')
+                setUser(result)
+                router.push('/')
             }
 
-            showToast('Register successful !')
-            router.push('/')
-            setUser(result)
         } catch (error) {
 
         }

@@ -17,22 +17,22 @@ export default function Page(){
     const handleSignIn = async () => {
         if (username == '' || password == '') {
             setError('All inputs must be filled !')
+            showToast('All inputs must be filled !', 'error')
             return
         }
 
         try {
-            const response = await axios.post(API_URLS + "auth/login", {
+            const response = await axios.post("/api/login", {
                 username: username,
                 password: password
             })
             const result = response.data
-
             if (result.error) {
                 showToast(result.message, 'error')
                 setError(result.message)
             }else{
                 //set localstorage
-                setUser(response.data)
+                setUser(result)
                 router.push('/')
             }
         } catch (error) {
