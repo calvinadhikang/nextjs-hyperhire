@@ -16,16 +16,16 @@ export default function BookItem(book: Book){
             router.push('/login')
         }else{
             try {
-                const response = await axios.post(API_URLS + 'book/buy', {
+                const response = await axios.post('/api/book/buy', {
                     user: user.id,
                     book: book.id,
                     quantity: 1
                 })
-
+                
                 showToast("Book has been added to cart !", 'success')
                 router.push('/cart')
             } catch (error) {
-            
+                console.log(error)
             }
         }
     }
