@@ -1,11 +1,12 @@
 'use client'
 
 import API_URLS from "@/app/(remaining)/api/apiConfig";
+import { showToast } from "@/app/(remaining)/components/Toast";
 import { setUser } from "@/app/(remaining)/utils/auth";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Page(){
     const router = useRouter()
@@ -24,12 +25,18 @@ export default function Page(){
                 username: username,
                 password: password
             })
+            const result = response.data
 
-            //set localstorage
-            setUser(response.data)
-            router.push('/')
+            if (result.error) {
+                showToast(result.message, 'error')
+                setError(result.message)
+            }else{
+                //set localstorage
+                setUser(response.data)
+                router.push('/')
+            }
         } catch (error) {
-            alert("Login Failed")
+
         }
     }
     

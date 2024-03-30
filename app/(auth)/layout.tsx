@@ -13,6 +13,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import { Inter } from "next/font/google";
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,6 +33,7 @@ export default function RootLayout({
             <div className="w-screen h-screen flex items-center justify-center">
                 <div className="max-w-sm w-full">{children}</div>
             </div>
+            <ToastContainer></ToastContainer>
         </body>
         </html>
     );

@@ -1,5 +1,6 @@
 'use client'
 import API_URLS from "@/app/(remaining)/api/apiConfig";
+import { showToast } from "@/app/(remaining)/components/Toast";
 import { setUser } from "@/app/(remaining)/utils/auth";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
@@ -26,15 +27,20 @@ export default function Page(){
                 username: username,
                 password: password
             })
-            
-            if (response.status == 201) {
-                router.push('/')
-                setUser(response.data)
-            }
-        } catch (error) {
-            setError('Username has been used')
-        }
+            const result = response.data
 
+            if (result.error) {
+                showToast(result.message, 'error')
+                setError(result.message)
+                return
+            }
+
+            showToast('Register successful !')
+            router.push('/')
+            setUser(result)
+        } catch (error) {
+
+        }
     }
 
     return (
