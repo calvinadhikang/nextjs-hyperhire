@@ -5,8 +5,11 @@ import { Book, Tag } from "../interfaces/interfaces"
 import BookItem from "./BookItem"
 import axios from "axios"
 import API_URLS from "../api/apiConfig"
+import { useRouter } from "next/navigation"
+import { Router } from "next/router"
 
 export default function BookPage () {
+    const router = useRouter()
     const [search, setSearch] = useState('')
     const [books, setBooks] = useState<Book[]>([])
     const [tags, setTags] = useState<Tag[]>([])
@@ -18,12 +21,12 @@ export default function BookPage () {
             setLoading(true)
 
             const queryParams = new URLSearchParams();
+            queryParams.append('search', search)
             queryTags.forEach((tag) => {
                 queryParams.append('tags', tag)
             })
-            console.log(queryParams)
 
-            let url = `book?search=${search}&${queryParams}`
+            let url = `book?${queryParams}`
             const response = await axios.get(API_URLS + url)
             
             setBooks(response.data)
