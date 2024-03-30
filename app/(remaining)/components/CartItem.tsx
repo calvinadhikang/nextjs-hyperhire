@@ -14,7 +14,7 @@ export default function CartItem ({
     onAction: () => void
 }) {
     const showModal = () => {
-        const element = document.getElementById(`my_modal_${cart.id}`)
+        const element = document.getElementById(`my_modal_${cart.id}`) as HTMLDialogElement
         if (element != null) {
             element.showModal()
         }
