@@ -1,12 +1,12 @@
 'use client'
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Book, Tag } from "../interfaces/interfaces"
 import BookItem from "./BookItem"
 import axios from "axios"
 import API_URLS from "../api/apiConfig"
 import { useRouter } from "next/navigation"
-import { Router } from "next/router"
+import InfiniteScroll from "react-infinite-scroll-component"
 
 export default function BookPage () {
     const router = useRouter()
@@ -15,33 +15,54 @@ export default function BookPage () {
     const [tags, setTags] = useState<Tag[]>([])
     const [queryTags, setQueryTags] = useState<string[]>([])
     const [loading, setLoading] = useState(false)
+    const [hasMore, setHasMore] = useState(true)
+    const [page, setPage] = useState(1)
+    const limit = 4
+    const prevSearch = useRef('')
 
-    useEffect(() => {
-        const fetchBooks = async () => {
-            setLoading(true)
+    const fetchBooks = async () => {
+        if (loading) {
+            return
+        }
+        setLoading(true)
 
-            const queryParams = new URLSearchParams();
-            queryParams.append('search', search)
-            queryTags.forEach((tag) => {
-                queryParams.append('tags', tag)
-            })
+        const queryParams = new URLSearchParams();
+        queryParams.append('search', search)
+        queryParams.append('page', page.toString())
+        queryParams.append('limit', limit.toString())
+        queryTags.forEach((tag) => {
+            queryParams.append('tags', tag)
+        })
 
-            let url = `book?${queryParams}`
+        let url = `book?${queryParams}`
+        console.log(url)
+        try {
             const response = await axios.get(API_URLS + url)
+            const newData = response.data
             
-            setBooks(response.data)
+            if (newData.length === 0) {
+                setHasMore(false)
+            } else {
+                const filteredNewData = newData.filter((item: Book) => !books.find(book => book.id === item.id));
+                setBooks((prevData) => [...prevData, ...filteredNewData])
+                setPage((prevPage) => prevPage + 1)
+            }
+        } catch (error) {
+            
+        } finally {
             setLoading(false)
         }
+    }
 
-        const fetchTags = async () => {
-            const response = await axios.get(API_URLS + 'tag')
-            setTags(response.data)
-        }
-
-        fetchBooks()
+    useEffect(() => {
         fetchTags()
-    }, [search, queryTags])
+        fetchBooks()
+    }, [])
 
+    const fetchTags = async () => {
+        const response = await axios.get(API_URLS + 'tag')
+        setTags(response.data)
+    }
     
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const checkboxValue = event.target.value
@@ -66,7 +87,7 @@ export default function BookPage () {
                         <div className="collapse-content"> 
                             <ul>
                                 {tags.map((tag) => 
-                                    <li key={tag.id} className="mb-2">
+                                    <li key={`tag-${tag.id}`} className="mb-2">
                                         <div className="flex items-center gap-x-2">
                                             <input type="checkbox" className="checkbox" value={tag.name} onChange={handleCheckboxChange} checked={queryTags.includes(tag.name)} />
                                             <span>{tag.name}</span>
@@ -82,9 +103,22 @@ export default function BookPage () {
                         <input type="text" placeholder="Search by title..."className="input input-primary flex-1" value={search} onChange={(e) => setSearch(e.target.value)} />
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-5 ">
-                        {loading && <p>Loading...</p>}
-                        {books && books.map((book) => <BookItem key={book.id} {...book}></BookItem>)}
+                    {/* <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-5 "> */}
+                    <div className="">
+                        <p>{books.length}</p>
+                        <p>{page}</p>
+                        <p>{limit}</p>
+                        
+                        <InfiniteScroll
+                            dataLength={books.length}
+                            next={fetchBooks}
+                            hasMore={hasMore}
+                            loader={<p>Loading scroll...</p>}
+                            endMessage={<p>No more data</p>}
+                            scrollThreshold={0.9}
+                        >
+                            {books && books.map((book) => <BookItem key={book.id} {...book}></BookItem>)}
+                        </InfiniteScroll>
                     </div>
                 </div>
             </div>
