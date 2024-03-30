@@ -35,6 +35,7 @@ export default function Page(){
             queryParams.append('page', page.toString())
             queryParams.append('limit', limit.toString())
 
+
             let url = `cart/${user.id}?${queryParams}`
             const response = await axios.get(API_URLS + url)
             const newData = response.data

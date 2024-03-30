@@ -8,11 +8,6 @@ import API_URLS from "../api/apiConfig"
 import { useRouter } from "next/navigation"
 import InfiniteScroll from "react-infinite-scroll-component"
 
-const getTags = async () => {
-    const response = await axios.get(API_URLS + 'tag')
-    return response.data
-}
-
 export default function BookPage () {
     const router = useRouter()
     const [search, setSearch] = useState('')
@@ -65,8 +60,9 @@ export default function BookPage () {
     }, [])
 
     const fetchTags = async () => {
-        const response = await getTags()
-        setTags(response)
+        const response = await axios.get('/api/tags')
+        console.log(response)
+        setTags(response.data)
     }
     
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
