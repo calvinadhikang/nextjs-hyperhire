@@ -59,7 +59,7 @@ export default function ProfileNav () {
                     </div>
                 </div>
                 :
-                <Link href={'/auth/login'}>
+                <Link href={'login'}>
                     <button className="btn btn-sm">Login</button>
                 </Link>
             }

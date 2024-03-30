@@ -1,6 +1,6 @@
 'use client'
-import API_URLS from "@/app/api/apiConfig";
-import { setUser } from "@/app/utils/auth";
+import API_URLS from "@/app/(remaining)/api/apiConfig";
+import { setUser } from "@/app/(remaining)/utils/auth";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
