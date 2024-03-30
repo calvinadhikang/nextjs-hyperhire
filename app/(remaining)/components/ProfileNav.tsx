@@ -4,10 +4,14 @@ import { useEffect, useState } from "react";
 import { getUser, removeUser } from "../utils/auth";
 import Link from "next/link";
 import { User } from "../interfaces/interfaces";
+import { useRouter } from "next/navigation";
 
 export default function ProfileNav () {
+    const router = useRouter()
     const [userData, setUserData] = useState<User | null>(null);
     const [isLogout, setIsLogout] = useState(false)
+
+    console.log('nav')
 
     useEffect(() => {
         setUserData(getUser())
@@ -16,6 +20,7 @@ export default function ProfileNav () {
     const handleLogout = () => {
         removeUser()
         setIsLogout(true)
+        router.push('/')
     }
     
     return (
@@ -60,7 +65,9 @@ export default function ProfileNav () {
                 </div>
                 :
                 <Link href={'login'}>
-                    <button className="btn btn-sm">Login</button>
+                    {/* <button className="btn btn-sm">Login</button> */}
+                    <button className="btn btn-sm">Login &#8594;</button>
+
                 </Link>
             }
         </>

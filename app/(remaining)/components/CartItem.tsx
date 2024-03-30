@@ -2,6 +2,8 @@ import { Lemon } from "next/font/google";
 import { Cart } from "../interfaces/interfaces";
 import axios from "axios";
 import API_URLS from "../api/apiConfig";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 export default function CartItem ({
     cart, onAction
@@ -37,18 +39,19 @@ export default function CartItem ({
     return (
         <>
             <div key={cart.id} className="flex-1 flex items-center flex-row py-2 pe-16 ps-2 gap-5 rounded border">
-                <img src={cart.book.image} alt="" className="bg-cover"/>
+                <img src={cart.book.image} alt="" className="bg-cover h-52"/>
                 <div className="flex flex-1 items-center">
                     <div className="space-y-2 flex-1">
-                        <p className="font-medium text-xl">{cart.book.title}</p>
-                        <p>$ {cart.book.price} x {cart.quantity} pcs</p>
-                        <div className="space-x-2">
-                            <button className="btn btn-primary" onClick={() => handleCheckout()}>Purchase</button>
-                            <button className="btn btn-error" onClick={()=> showModal() }>Cancel</button>
-                        </div>
+                        <p className="font-medium text-2xl">{cart.book.title}</p>
+                        <p className="text-xl">$ {cart.book.price} x {cart.quantity} pcs</p>
+                        {/* <div className="space-x-2 py-8"> */}
+                            {/* <button className="btn btn-primary" onClick={() => handleCheckout()}>Purchase</button>
+                            <button className="btn btn-error" onClick={()=> showModal() }>Cancel</button> */}
+                        {/* </div> */}
                     </div>
                 </div>
-                <p className="font-medium text-xl">$ {cart.subtotal}</p>
+                <p className="font-medium text-3xl">$ {cart.subtotal}</p>
+                <p className="" style={{ color: 'gray', fontSize:'1.5em'}} onClick={()=> showModal()}><FontAwesomeIcon icon={faTrash} /></p>
             </div>
 
             {/* Open the modal using document.getElementById('ID').showModal() method */}
