@@ -11,7 +11,8 @@ export interface Book {
     title: string,
     writer: string,
     image: string,
-    price: number
+    price: number,
+    tags: Tag[] 
 }
 
 export interface Tag {

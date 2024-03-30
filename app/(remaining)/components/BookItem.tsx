@@ -10,7 +10,7 @@ export default function BookItem(book: Book){
     const handleBuy = async () => {
         const user = getUser()
         if (user == null) {
-            alert("Harus Login")
+            router.push('/login')
         }else{
             try {
                 const response = await axios.post(API_URLS + 'book/buy', {
@@ -36,8 +36,7 @@ export default function BookItem(book: Book){
                 </h2>
                 <p className="text-sm">by <span className="text-primary font-semibold">{book.writer}</span></p>
                 <div className="overflow-auto flex flex-wrap gap-2">
-                    <div className="badge badge-outline badge-sm">Fashion</div> 
-                    <div className="badge badge-outline badge-sm">Products</div>
+                    { book.tags.map((tag) => <div className="badge badge-outline badge-sm">{tag.name}</div> ) }
                 </div>
                 <button onClick={handleBuy} className="btn bg-indigo-600 text-white hover:bg-indigo-500 btn-sm mt-2 btn-block">Buy</button>
             </div>

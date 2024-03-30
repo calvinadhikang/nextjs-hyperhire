@@ -44,7 +44,7 @@ export default function BookPage () {
                         <div className="collapse-content"> 
                             <ul>
                                 {tags.map((tag) => 
-                                    <li key={tag.id}>
+                                    <li key={tag.id} className="mb-2">
                                         <div className="flex items-center gap-x-2">
                                             <input type="checkbox" className="checkbox" />
                                             <span>{tag.name}</span>
