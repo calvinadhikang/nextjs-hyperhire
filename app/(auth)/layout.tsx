@@ -31,7 +31,7 @@ export default function RootLayout({
         <html lang="en">
         <body className={inter.className}>
             <div className="w-screen h-screen flex items-center justify-center">
-                <div className="max-w-sm w-full">{children}</div>
+                <div className="max-w-sm w-full px-4">{children}</div>
             </div>
             <ToastContainer></ToastContainer>
         </body>

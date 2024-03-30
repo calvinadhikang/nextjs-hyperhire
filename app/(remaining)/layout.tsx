@@ -19,8 +19,10 @@ export default function RootLayout({
     return (
         <html lang="en">
         <body className={inter.className}>
-            <NavBar></NavBar>
-            {children}
+            <div className="px-4">
+                <NavBar></NavBar>
+                {children}
+            </div>
             <ToastContainer></ToastContainer>
         </body>
         </html>
